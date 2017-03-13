@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.example.calcinc.verysuchwowcalculator.BuildConfig;
+
 
 public class PagerAdapter extends FragmentPagerAdapter {
 
@@ -18,9 +20,9 @@ public class PagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return new CalcFragment();
             case 1:
-                return new FavsFragment();
+                return BuildConfig.FLAVOR.equals("v1") ? new BlankFragment() : new FavsFragment();
             case 2:
-                return new HistoryFragment();
+                return BuildConfig.FLAVOR.equals("v1") || BuildConfig.FLAVOR.equals("v2") ? new BlankFragment() : new HistoryFragment();
         }
         return null;
     }

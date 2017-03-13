@@ -1,6 +1,6 @@
 package com.example.calcinc.verysuchwowcalculator.calcutils;
 
-class Result {
+public class Result {
 
     private enum Type {
         STRING, DOUBLE
@@ -24,9 +24,8 @@ class Result {
 
     @Override
     public String toString() {
-        if (type.equals(Type.STRING))
-            return resultS;
-        else
-            return String.valueOf((int) resultD);
+        if (type.equals(Type.STRING)) return resultS;
+        else if (resultD == 42) return "Смысл жизнь и все такое";
+        return String.valueOf(resultD);
     }
 }

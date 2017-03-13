@@ -4,6 +4,7 @@ package com.example.calcinc.verysuchwowcalculator.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,6 @@ import butterknife.ButterKnife;
 public class HistoryFragment extends Fragment {
 
     private ArrayAdapter adapter;
-    private HistoryHelper db;
 
     public HistoryFragment() {
     }
@@ -29,10 +29,12 @@ public class HistoryFragment extends Fragment {
     @BindView(R.id.history_list)
     ListView historyList;
 
+    @BindView(R.id.history_refresh)
+    SwipeRefreshLayout refreshLayout;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        db = new HistoryHelper(getContext().getApplicationContext());
     }
 
     @Override
@@ -40,17 +42,16 @@ public class HistoryFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_history, container, false);
         ButterKnife.bind(this, v);
 
-        adapter = new ArrayAdapter<>(getActivity(), android.R.layout.activity_list_item);
+        adapter = new ArrayAdapter<>(getActivity(), R.layout.item_history, R.id.text);
+        refreshLayout.setOnRefreshListener(() -> {
+            adapter.clear();
+            adapter.addAll(HistoryHelper.getInstance().getHistory());
+            adapter.notifyDataSetChanged();
+            refreshLayout.setRefreshing(false);
+        });
 
+        adapter.addAll(HistoryHelper.getInstance().getHistory());
         historyList.setAdapter(adapter);
         return v;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        adapter.clear();
-        adapter.addAll(db.getHistory());
-        adapter.notifyDataSetChanged();
     }
 }
